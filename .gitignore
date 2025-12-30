@@ -36,3 +36,20 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# 忽略编译产生的文件
+target/
+*.class
+
+# 忽略 IntelliJ IDEA 的本地配置 (别人的电脑不需要你的配置)
+.idea/
+*.iml
+.mvn/
+mvnw
+mvnw.cmd
+
+# 忽略运行时生成的数据
+uploads/
+data/
+*.txt
+*.log

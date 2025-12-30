@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Recent Documents</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Roboto', sans-serif; background: #f9fbfd; margin: 0; }
+        .navbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; align-items: center;}
+        .grid { display: flex; flex-wrap: wrap; padding: 40px; gap: 20px; }
+        .card {
+            background: white; width: 200px; height: 250px; border: 1px solid #ddd; border-radius: 8px;
+            cursor: pointer; transition: 0.2s; display: flex; flex-direction: column;
+        }
+        .card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); transform: translateY(-2px); }
+        .preview { flex: 1; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: center; background: #f8f9fa; color: #ddd; font-size: 50px; }
+        .info { padding: 15px; }
+        .title { font-weight: 500; color: #3c4043; font-size: 14px; margin-bottom: 5px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;}
+        .meta { font-size: 12px; color: #5f6368; display: flex; align-items: center; gap: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div style="font-size: 20px; color: #5f6368;"><i class="fa-solid fa-file-lines" style="color:#4285F4;"></i> UUM Docs</div>
+    <div id="welcome-user">User</div>
+</div>
+
+<div style="padding: 20px 40px 0;">
+    <h3>Recent documents</h3>
+    <button onclick="createNew()" style="padding: 8px 16px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer;">+ New Blank Document</button>
+</div>
+
+<div class="grid" id="doc-grid">
+</div>
+
+<script>
+    var user = localStorage.getItem("uum_user");
+    // 安全检查：如果没登录，踢回登录页
+    if (!user) {
+        window.location.href = "login.html";
+    }
+    document.getElementById("welcome-user").innerText = "Hi, " + user;
+
+    // 加载我的文档
+    fetch('/api/my-docs?username=' + user)
+        .then(res => res.json())
+        .then(docs => {
+            var grid = document.getElementById("doc-grid");
+            grid.innerHTML = ""; // 清空
+
+            if (docs.length === 0) {
+                grid.innerHTML = "<div style='color:#777; margin-left:5px;'>No documents found. Create one!</div>";
+            }
+
+            docs.forEach(doc => {
+                var card = `
+                <div class="card" onclick="openDoc('${doc.docId}')">
+                    <div class="preview"><i class="fa-solid fa-file-word"></i></div>
+                    <div class="info">
+                        <div class="title">${doc.title}</div>
+                        <div class="meta">Owner: ${doc.owner}</div>
+                    </div>
+                </div>
+            `;
+                grid.innerHTML += card;
+            });
+        });
+
+    function createNew() {
+        var title = prompt("Enter document title:");
+        if(title) {
+            fetch('/api/create-doc', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({title: title, owner: user})
+            }).then(res => res.json())
+                .then(data => {
+                    openDoc(data.docId);
+                });
+        }
+    }
+
+    // --- ⬇️ 这里就是你之前缺失的代码 ⬇️ ---
+    function openDoc(docId) {
+        // 跳转到编辑器页面，并带上文档 ID
+        window.location.href = "index.html?docId=" + docId;
+    }
+</script>
+</body>
+</html>

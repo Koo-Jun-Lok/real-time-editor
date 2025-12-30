@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - UUM Docs</title>
+    <style>
+        body { font-family: 'Roboto', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f2f5; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;}
+        button { width: 100%; padding: 10px; background: #1a73e8; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #1557b0; }
+    </style>
+</head>
+<body>
+<div class="login-card">
+    <h2 style="color: #444;">UUM Docs Login</h2>
+    <input type="text" id="username" placeholder="Enter Matric No / Name">
+    <button onclick="login()">Sign In</button>
+</div>
+
+<script>
+    function login() {
+        var username = document.getElementById("username").value;
+        var password = "123"; // 演示用，或者你在HTML加个密码框
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: username, password: password})
+        }).then(res => {
+            if (res.ok) {
+                localStorage.setItem("uum_user", username);
+                window.location.href = "dashboard.html";
+            } else {
+                alert("Login failed");
+            }
+        });
+    }
+</script>
+</body>
+</html>

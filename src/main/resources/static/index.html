@@ -8,57 +8,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        .header {
+            background: white; height: 64px; padding: 0 24px;
+            border-bottom: 1px solid #e0e0e0; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        #doc-title { font-size: 18px; color: #202124; font-weight: 500; }
+        #save-status { font-size: 12px; color: #5f6368; margin-top: 2px; }
+        .btn-save {
+            background-color: #1a73e8; color: white; border: none;
+            padding: 8px 20px; border-radius: 4px; font-weight: 500;
+            font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+        }
+        .btn-save:hover { background-color: #1557b0; }
+    </style>
 </head>
 <body>
 
 <div class="header">
-    <div style="display:flex; align-items:center; gap:10px;">
-        <i class="fa-solid fa-file-lines" style="color:#4285F4; font-size:24px;"></i>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <div onclick="window.location.href='dashboard.html'"
+             style="cursor: pointer; padding: 8px;" title="Back">
+            <i class="fa-solid fa-arrow-left" style="color:#5f6368; font-size:20px;"></i>
+        </div>
+        <i class="fa-solid fa-file-lines" style="color:#4285F4; font-size:28px;"></i>
         <div>
-            <div id="status" class="status" style="font-size:14px; font-weight: 500; color: #5f6368;">Connecting...</div>
+            <div id="doc-title">Loading...</div>
+            <div id="save-status"><i class="fa-solid fa-check"></i> Ready</div>
         </div>
     </div>
-    <div id="user-count" class="user-badge">Users: 0</div>
+
+    <div style="display:flex; align-items:center; gap: 15px;">
+        <div id="user-count" class="user-badge" style="background:#e8f0fe; color:#1967d2; padding:5px 10px; border-radius:15px;">
+            <i class="fa-solid fa-users"></i> 0
+        </div>
+        <button class="btn-save" onclick="manualSave()">
+            <i class="fa-regular fa-floppy-disk"></i> Save
+        </button>
+    </div>
 </div>
 
 <div class="app-container">
     <div id="toolbar-container">
-        <span class="ql-formats">
-            <select class="ql-font" title="Font"></select>
-            <select class="ql-size" title="Size"></select>
-        </span>
-        <span class="separator"></span>
-        <span class="ql-formats">
-            <button class="ql-bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
-            <button class="ql-italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
-            <button class="ql-underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
-            <select class="ql-color" title="Text Color"></select>
-        </span>
-        <span class="separator"></span>
-        <span class="ql-formats">
-            <button class="ql-list" value="ordered"><i class="fa-solid fa-list-ol"></i></button>
-            <button class="ql-list" value="bullet"><i class="fa-solid fa-list-ul"></i></button>
-            <button class="ql-indent" value="-1"><i class="fa-solid fa-outdent"></i></button>
-            <button class="ql-indent" value="+1"><i class="fa-solid fa-indent"></i></button>
-        </span>
-        <span class="separator"></span>
-        <span class="ql-formats">
-            <button class="ql-align" value=""><i class="fa-solid fa-align-left"></i></button>
-            <button class="ql-align" value="center"><i class="fa-solid fa-align-center"></i></button>
-            <button class="ql-align" value="right"><i class="fa-solid fa-align-right"></i></button>
-        </span>
-        <span class="separator"></span>
-        <span class="ql-formats">
-            <button class="ql-link"><i class="fa-solid fa-link"></i></button>
-            <button class="ql-image"><i class="fa-regular fa-image"></i></button>
-            <button class="ql-attach-file"><i class="fa-solid fa-paperclip"></i></button>
-        </span>
-        <span class="separator"></span>
-        <span class="ql-formats">
-            <button class="ql-clean"><i class="fa-solid fa-eraser"></i></button>
-        </span>
+        <span class="ql-formats"><select class="ql-font"></select><select class="ql-size"></select></span>
+        <span class="ql-formats"><button class="ql-bold"></button><button class="ql-italic"></button><button class="ql-underline"></button><select class="ql-color"></select></span>
+        <span class="ql-formats"><button class="ql-list" value="ordered"></button><button class="ql-list" value="bullet"></button></span>
+        <span class="ql-formats"><button class="ql-align" value=""></button><button class="ql-align" value="center"></button><button class="ql-align" value="right"></button></span>
+        <span class="ql-formats"><button class="ql-link"></button><button class="ql-image"></button><button class="ql-attach-file"></button></span>
     </div>
-
     <div id="editor-wrapper">
         <div id="editor-container"></div>
     </div>
@@ -69,7 +68,6 @@
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
-<script src="main.js?v=17"></script>
-
+<script src="main.js?v=22"></script>
 </body>
 </html>
