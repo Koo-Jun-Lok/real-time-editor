@@ -39,7 +39,7 @@ public class EditorController {
     private Thread backupThread;
     private volatile boolean isRunning = true;
 
-    // --- API & Listeners (保持不变) ---
+    // --- API & Listeners  ---
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> body) {
         String username = body.get("username");
@@ -54,7 +54,9 @@ public class EditorController {
     }
 
     @GetMapping("/api/my-docs")
-    public List<Document> getMyDocs(@RequestParam String username) { return documentRepository.findByOwner(username); }
+    public List<Document> getMyDocs(@RequestParam(required = false) String username) {
+        return documentRepository.findAll();
+    }
 
     @PostMapping("/api/create-doc")
     public ResponseEntity<?> createDoc(@RequestBody Map<String, String> body) {

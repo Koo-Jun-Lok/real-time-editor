@@ -10,10 +10,10 @@ public class Document {
 
     private String title;
 
-    @Lob // 大文本字段
+    @Lob
     private String content;
 
-    private String owner; // 谁创建的
+    private String owner;
 
     public Document() {}
     public Document(String docId, String title, String content, String owner) {

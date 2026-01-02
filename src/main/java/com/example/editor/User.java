@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
-    private String username; // 用户名作为主键
-    private String password; // 简单起见，暂存明文
+    private String username;
+    private String password;
 
     public User() {}
     public User(String username, String password) {

@@ -35,18 +35,17 @@
 
 <script>
     var user = localStorage.getItem("uum_user");
-    // 安全检查：如果没登录，踢回登录页
     if (!user) {
         window.location.href = "login.html";
     }
     document.getElementById("welcome-user").innerText = "Hi, " + user;
 
-    // 加载我的文档
+
     fetch('/api/my-docs?username=' + user)
         .then(res => res.json())
         .then(docs => {
             var grid = document.getElementById("doc-grid");
-            grid.innerHTML = ""; // 清空
+            grid.innerHTML = "";
 
             if (docs.length === 0) {
                 grid.innerHTML = "<div style='color:#777; margin-left:5px;'>No documents found. Create one!</div>";
@@ -80,9 +79,9 @@
         }
     }
 
-    // --- ⬇️ 这里就是你之前缺失的代码 ⬇️ ---
+
     function openDoc(docId) {
-        // 跳转到编辑器页面，并带上文档 ID
+
         window.location.href = "index.html?docId=" + docId;
     }
 </script>

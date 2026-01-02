@@ -4,7 +4,6 @@ public class DocMessage {
     private String content;
     private String sender;
     private String docId;
-    // --- 新增: 标题字段 ---
     private String title;
 
     public DocMessage() {}
@@ -15,7 +14,7 @@ public class DocMessage {
         this.docId = docId;
     }
 
-    // 带 Title 的构造函数 (Controller 会用到这个)
+
     public DocMessage(String content, String sender, String docId, String title) {
         this.content = content;
         this.sender = sender;

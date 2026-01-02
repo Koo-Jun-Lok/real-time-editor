@@ -97,3 +97,105 @@ body {
     font-size: 11pt; color: #000;
     margin-bottom: 50px;
 }
+
+/* Let's ensure the editor container has enough height */
+#editor-container {
+    height: calc(100vh - 180px); /* Adjust based on header + new taller toolbar height */
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+}
+
+/* =========================================
+   [Fix] Image Dragging & Positioning
+   ========================================= */
+/* Make images inline-block so they flow with text and are easier to grab */
+#editor-container img {
+    display: inline-block;
+    vertical-align: bottom;
+    margin: 5px;
+    cursor: move; /* Shows a "move" cursor when hovering over images */
+    box-shadow: 0 0 0 2px transparent; /* Placeholder for selection */
+    transition: box-shadow 0.2s;
+}
+
+/* Optional: Give a visual cue when the image is selected (clicked) */
+/* The resize module usually handles this, but this is a backup */
+#editor-container img::selection {
+    box-shadow: 0 0 0 2px #4285F4;
+}
+
+/* =========================================
+   [Improvement] Two-Row Toolbar Layout
+   ========================================= */
+/* The container for the whole toolbar */
+#toolbar-container {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 5px 10px !important; /* Override default Quill padding */
+}
+
+/* Flex container for each row */
+.toolbar-row {
+    display: flex;
+    flex-wrap: wrap; /* Ensure it doesn't break on small screens */
+    align-items: center;
+    gap: 5px; /* Space between button groups */
+    padding: 5px 0;
+}
+
+/* Add a separator line between the first and second row */
+.toolbar-row:first-child {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Adjust the vertical separator lines inside the rows */
+.separator {
+    height: 20px;
+    width: 1px;
+    background: #ddd;
+    margin: 0 8px;
+    display: inline-block;
+}
+
+/* Better spacing for Quill formats group */
+.ql-formats {
+    margin-right: 0 !important; /* Remove default Quill margin */
+    display: flex;
+    align-items: center;
+}
+
+
+#editor-container::-webkit-scrollbar,
+.ql-editor::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+}
+
+
+#editor-container,
+.ql-editor {
+    scrollbar-width: none !important;
+}
+
+
+#editor-container,
+.ql-editor {
+    -ms-overflow-style: none !important;
+}
+
+
+#editor-container {
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+.ql-container.ql-snow {
+    border: none !important;
+}
+
+.ql-editor {
+    padding: 30px 40px !important;
+}

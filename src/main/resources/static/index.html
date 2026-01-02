@@ -52,11 +52,50 @@
 
 <div class="app-container">
     <div id="toolbar-container">
-        <span class="ql-formats"><select class="ql-font"></select><select class="ql-size"></select></span>
-        <span class="ql-formats"><button class="ql-bold"></button><button class="ql-italic"></button><button class="ql-underline"></button><select class="ql-color"></select></span>
-        <span class="ql-formats"><button class="ql-list" value="ordered"></button><button class="ql-list" value="bullet"></button></span>
-        <span class="ql-formats"><button class="ql-align" value=""></button><button class="ql-align" value="center"></button><button class="ql-align" value="right"></button></span>
-        <span class="ql-formats"><button class="ql-link"></button><button class="ql-image"></button><button class="ql-attach-file"></button></span>
+        <div class="toolbar-row">
+            <span class="ql-formats">
+                <select class="ql-font" title="Font"></select>
+                <select class="ql-size" title="Size"></select>
+            </span>
+            <span class="separator"></span>
+            <span class="ql-formats">
+                <button class="ql-bold" title="Bold"></button>
+                <button class="ql-italic" title="Italic"></button>
+                <button class="ql-underline" title="Underline"></button>
+                <button class="ql-strike" title="Strikethrough"></button>
+            </span>
+            <span class="separator"></span>
+            <span class="ql-formats">
+                <select class="ql-color" title="Text Color"></select>
+                <select class="ql-background" title="Highlight"></select>
+            </span>
+        </div>
+
+        <div class="toolbar-row" style="padding-top: 8px;"> <span class="ql-formats">
+                <button class="ql-list" value="ordered" title="Ordered List"></button>
+                <button class="ql-list" value="bullet" title="Bullet List"></button>
+                <button class="ql-indent" value="-1" title="Decrease Indent"></button>
+                <button class="ql-indent" value="+1" title="Increase Indent"></button>
+            </span>
+            <span class="separator"></span>
+            <span class="ql-formats">
+                <button class="ql-align" value="" title="Align Left"></button>
+                <button class="ql-align" value="center" title="Align Center"></button>
+                <button class="ql-align" value="right" title="Align Right"></button>
+                <button class="ql-align" value="justify" title="Justify"></button>
+            </span>
+            <span class="separator"></span>
+            <span class="ql-formats">
+                <button class="ql-link" title="Insert Link"></button>
+                <button class="ql-image" title="Insert Image"></button>
+                <button class="ql-attach-file" title="Upload File">
+                    <i class="fa-solid fa-paperclip"></i>
+                </button>
+            </span>
+            <span class="separator"></span>
+            <span class="ql-formats" style="margin-left: auto;"> <button class="ql-clean" title="Clear Formatting"></button>
+            </span>
+        </div>
     </div>
     <div id="editor-wrapper">
         <div id="editor-container"></div>
