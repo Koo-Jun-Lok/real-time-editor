@@ -14,7 +14,7 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.*; // Import for all concurrent collections
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -26,10 +26,25 @@ public class EditorController {
     @Autowired private DocumentRepository documentRepository;
     @Autowired private SimpMessagingTemplate messagingTemplate;
 
+    // --- High-Level Concurrent Data Structures (The "Big Four") ---
+
+    // 1. BlockingQueue: Implements Producer-Consumer pattern.
+    // Handles the flow of edits safely between the User (Producer) and WorkerThread (Consumer).
     private final BlockingQueue<DocMessage> editQueue = new LinkedBlockingQueue<>();
+
+    // 2. ConcurrentHashMap: Optimized for high-concurrency Read/Write access.
+    // Uses "Lock Stripping" to allow multiple threads to update different documents simultaneously without blocking.
     private final Map<String, String> documentStates = new ConcurrentHashMap<>();
-    private final Set<String> dirtyDocIds = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    private final Set<String> activeSessions = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
+    // 3. ConcurrentSkipListSet: Thread-safe Sorted Set.
+    // Used for 'dirtyDocIds' to keep track of modified documents.
+    // Benefit: Keeps IDs sorted naturally, ensuring backups happen in a predictable order.
+    private final Set<String> dirtyDocIds = new ConcurrentSkipListSet<>();
+
+    // 4. CopyOnWriteArrayList: Thread-safe List optimized for "High Read, Low Write".
+    // Used for active sessions. Broadcasting (Iterating) is very fast and lock-free.
+    // Adding/Removing users is slower (copies array), but acceptable since it happens less frequently than broadcasting.
+    private final List<String> activeSessions = new CopyOnWriteArrayList<>();
 
     // Requirement f: Implement Lock interface
     private final Lock globalLock = new ReentrantLock();
@@ -73,8 +88,11 @@ public class EditorController {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String sessionId = headerAccessor.getSessionId();
         if (sessionId != null) {
-            activeSessions.add(sessionId);
-            broadcastUserCount();
+            // Check to avoid duplicates since List doesn't enforce uniqueness like Set
+            if (!activeSessions.contains(sessionId)) {
+                activeSessions.add(sessionId);
+                broadcastUserCount();
+            }
         }
     }
 
@@ -105,6 +123,7 @@ public class EditorController {
             }
         });
         workerThread.setName("Editor-Worker-Thread");
+        workerThread.setPriority(Thread.MAX_PRIORITY);
         workerThread.start();
 
         backupThread = new Thread(() -> {
@@ -119,6 +138,7 @@ public class EditorController {
             }
         });
         backupThread.setName("Editor-Backup-Thread");
+        backupThread.setPriority(Thread.MIN_PRIORITY);
         backupThread.start();
     }
 
@@ -193,11 +213,11 @@ public class EditorController {
 
     private void performBatchBackupToDB() {
         // Make a copy to process safely
+        // Since dirtyDocIds is a ConcurrentSkipListSet, the order is guaranteed (Sorted)
         Set<String> docsToSave = new HashSet<>(dirtyDocIds);
         dirtyDocIds.removeAll(docsToSave);
 
         // Requirement g: Parallel Streams (reduction/processing)
-        // 使用 parallelStream 并行处理保存任务，提高性能
         docsToSave.parallelStream().forEach(docId -> {
             String content = documentStates.get(docId);
             if (content != null) {
